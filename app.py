@@ -26,5 +26,21 @@ def login():
             # If both inputs are valid, go to the result page.
             return redirect(url_for('result', username=username, password=password))
 
+# Create html form
+    form_html = f'''
+    <form method="POST" action="/login">
+        <label>Username:</label>
+        <input type="text" name="username" value="{username}">
+
+        <label>Password:</label>
+        <input type="password" name="password">
+
+        <input type="submit" value="Login">
+    </form>
+
+    <p>{output}</p>
+    '''
+
+    return render_template_string(form_html)
 
 
