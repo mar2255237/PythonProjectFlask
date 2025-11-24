@@ -8,3 +8,8 @@ bcrypt = Bcrypt(app)
 def login():
     output = ""
     username = ""
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
