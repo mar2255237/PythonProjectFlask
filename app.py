@@ -43,4 +43,11 @@ def login():
 
     return render_template_string(form_html)
 
+# URL Results page
+@app.route('/result')
+def result():
+    username = request.args.get("username")
+    password = request.args.get("password")
+
+    return f"Username: {username} Password: {password}"
 
