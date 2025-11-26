@@ -29,10 +29,10 @@ def login():
         elif not any(not c.isalnum() for c in password):
             output = "Password must contain at least 1 special character."
         else:
-            # Hash password
+            # Hash the user password
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-            # Redirect to the result page, passing username and hashed password in the URL
+            # Redirect to the result page, passing username and hashed password in the URL.
             return redirect(url_for('result', username=username, password=hashed_password))
 
     # Create HTML form
