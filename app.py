@@ -1,8 +1,13 @@
+# Import core Flask features: handling requests, rendering HTML, and redirecting URLs.
 from flask import Flask, request, render_template_string, redirect, url_for
+
+# Import Bcrypt to securely hash passwords instead of storing them in plain text.
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+# Attach Bcrypt for hashing.
 bcrypt = Bcrypt(app)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -10,6 +15,7 @@ def login():
     username = ""
 
     if request.method == 'POST':
+        # Retrieve user input from the form
         username = request.form['username']
         password = request.form['password']
 
@@ -23,10 +29,13 @@ def login():
         elif not any(not c.isalnum() for c in password):
             output = "Password must contain at least 1 special character."
         else:
-            # If both inputs are valid, go to the result page.
-            return redirect(url_for('result', username=username, password=password))
+            # Hash password
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-# Create html form
+            # Redirect to the result page, passing username and hashed password in the URL
+            return redirect(url_for('result', username=username, password=hashed_password))
+
+    # Create HTML form
     form_html = f'''
     <form method="POST" action="/login">
         <label>Username:</label>
@@ -43,13 +52,16 @@ def login():
 
     return render_template_string(form_html)
 
+
 # URL Results page
 @app.route('/result')
 def result():
+    # Retrieve values passed through the URL
     username = request.args.get("username")
     password = request.args.get("password")
 
-    return f"Username: {username} Password: {password}"
+    return f"Username: {username} Hashed Password: {password}"
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5005)
+    app.run(debug=True, port=5001)
